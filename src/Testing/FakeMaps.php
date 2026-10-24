@@ -5,6 +5,7 @@ namespace Awkw\MapsClient\Testing;
 use Awkw\MapsClient\Data\Asset;
 use Awkw\MapsClient\Data\MapDocument;
 use Awkw\MapsClient\Data\PublishedMap;
+use Awkw\MapsClient\Hashid;
 use Awkw\MapsClient\Maps;
 use Awkw\MapsClient\MapsException;
 use Illuminate\Support\Str;
@@ -13,7 +14,8 @@ use PHPUnit\Framework\Assert;
 /**
  * The maps service in memory, for a client app's tests: FakeMaps::swap()
  * binds it in place of the real client. It keeps what was published and
- * uploaded, answers like the service, and asserts on what happened.
+ * uploaded, answers like the service (refusing a hashid that isn't one, as
+ * the real client does), and asserts on what happened.
  */
 class FakeMaps implements Maps
 {
@@ -56,6 +58,8 @@ class FakeMaps implements Maps
 
     public function update(string $hashid, MapDocument $document): PublishedMap
     {
+        Hashid::check($hashid);
+
         if (! isset($this->maps[$hashid])) {
             throw new MapsException("maps: 404 No map {$hashid} of yours.", 404);
         }
@@ -68,12 +72,15 @@ class FakeMaps implements Maps
 
     public function unpublish(string $hashid): void
     {
+        Hashid::check($hashid);
         unset($this->maps[$hashid]);
         $this->unpublished[] = $hashid;
     }
 
     public function get(string $hashid): array
     {
+        Hashid::check($hashid);
+
         if (! isset($this->maps[$hashid])) {
             throw new MapsException("maps: 404 No map {$hashid} of yours.", 404);
         }

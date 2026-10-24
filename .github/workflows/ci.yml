@@ -17,7 +17,7 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    # composer.json takes PHP 8.3 and Laravel 11–13, so both ends are tested:
+    # composer.json takes PHP 8.3 and Laravel 12 or 13, so both ends are tested:
     # the oldest versions that resolve, and the newest.
     strategy:
       fail-fast: false

@@ -55,7 +55,7 @@ class MapsClient implements Maps
 
     public function get(string $hashid): array
     {
-        return $this->answer($this->send('get', $this->mapPath($hashid)), ['hashid', 'version'], repeatable: true);
+        return $this->answer($this->send('get', $this->mapPath($hashid)), ['hashid' => 'hashid', 'version' => 'int'], repeatable: true);
     }
 
     public function uploadAsset(string $contents, string $contentType): Asset
@@ -68,24 +68,17 @@ class MapsClient implements Maps
         return Asset::fromArray($this->answer($response, Asset::FIELDS, repeatable: false));
     }
 
-    /**
-     * A map's path, from a hashid checked to be one: a corrupted value such
-     * as "../assets" would otherwise reach another endpoint with this key,
-     * and an unpublish would take the 404 as success.
-     */
+    /** A map's path, from a hashid checked to be one (Hashid::check). */
     protected function mapPath(string $hashid): string
     {
-        if (preg_match('/^[A-Za-z0-9]{10}$/', $hashid) !== 1) {
-            throw new \InvalidArgumentException("Not a map hashid: \"{$hashid}\".");
-        }
-
-        return 'v1/maps/'.rawurlencode($hashid);
+        return 'v1/maps/'.rawurlencode(Hashid::check($hashid));
     }
 
     /**
-     * A success's body, checked to hold what the API answers.
+     * A success's body, checked to hold what the API answers, each field of
+     * the type the data classes build from.
      *
-     * @param  list<string>  $fields  dotted paths that must be present
+     * @param  array<string, 'string'|'int'|'hashid'|'images'>  $fields  dotted paths and their types
      * @return array<string, mixed>
      */
     protected function answer(Response $response, array $fields, bool $repeatable): array
@@ -96,13 +89,28 @@ class MapsClient implements Maps
             throw MapsException::unexpectedAnswer($response, $repeatable);
         }
 
-        foreach ($fields as $field) {
-            if (data_get($body, $field) === null) {
+        foreach ($fields as $field => $type) {
+            if (! self::isOfType(data_get($body, $field), $type)) {
                 throw MapsException::unexpectedAnswer($response, $repeatable);
             }
         }
 
         return $body;
+    }
+
+    /** @param 'string'|'int'|'hashid'|'images' $type */
+    protected static function isOfType(mixed $value, string $type): bool
+    {
+        return match ($type) {
+            'string' => is_string($value),
+            'int' => is_int($value),
+            'hashid' => Hashid::valid($value),
+            'images' => is_array($value) && array_is_list($value) && array_filter(
+                $value,
+                fn (mixed $image) => ! is_array($image) || ! is_int($image['width'] ?? null)
+                    || ! is_string($image['webp'] ?? null) || ! is_string($image['jpg'] ?? null),
+            ) === [],
+        };
     }
 
     /** @param array<string, mixed>|null $body */

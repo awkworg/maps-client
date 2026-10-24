@@ -69,9 +69,10 @@ Every failure is a `MapsException`:
 - `retryable`: the same call is safe to make again and could succeed later.
   A queued job can release itself on `retryable`.
 - `uncertain`: a publish or upload failed in a way that may have succeeded (a
-  timeout, a lost connection). Making it again could make a second map, so
-  don't just retry. Find out first whether it landed, for example by keeping
-  the hashid only once a publish answers.
+  timeout, a lost connection, a 500). The map may exist, and this client
+  can't find it: the service never answered with its hashid. Making the call
+  again could make a second map, so don't retry it. Fail the job and report
+  it, so someone can decide whether a stray map matters.
 
 When neither is set, the same call will fail the same way: fix the document
 or the key.
@@ -79,7 +80,8 @@ or the key.
 A hashid that isn't one throws `InvalidArgumentException` before any request
 is sent. The client already retries a couple of times when the service says
 nothing was done (429, 503). For calls that are safe to repeat (update, unpublish,
-get), it also retries when the service couldn't be reached or timed out. A
+get), it also retries when the service couldn't be reached, timed out, or
+failed (500, 502, 504). A
 publish that may have been stored is never sent twice.
 
 ## Testing an app that uses it

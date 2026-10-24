@@ -26,8 +26,12 @@ class MapsException extends RuntimeException
     /** The service answers these when nothing was done, so any call may be made again. */
     public const NOTHING_DONE = [429, 503];
 
-    /** These may come after the call was done, so only a repeatable call may be made again. */
-    public const MAYBE_DONE = [502, 504];
+    /**
+     * These may come after the call was done, so only a repeatable call may
+     * be made again. A 500 is among them: the service promises nothing about
+     * what it stored before failing.
+     */
+    public const MAYBE_DONE = [500, 502, 504];
 
     /**
      * @param  list<array{path: string, message: string}>  $problems
@@ -73,15 +77,16 @@ class MapsException extends RuntimeException
     }
 
     /**
-     * A success whose body isn't what the API answers. The call was done, so
-     * it isn't retryable; for a call that isn't safe to repeat, what it made
-     * is unknown.
+     * A success whose body isn't what the API answers. The call was done: a
+     * repeatable one may be made again for a usable answer, and for one that
+     * isn't safe to repeat, what it made is unknown.
      */
     public static function unexpectedAnswer(Response $response, bool $repeatable): self
     {
         return new self(
             "maps: {$response->status()} with an answer that isn't the API's",
             $response->status(),
+            retryable: $repeatable,
             uncertain: ! $repeatable,
         );
     }

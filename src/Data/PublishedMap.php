@@ -5,8 +5,14 @@ namespace Awkw\MapsClient\Data;
 /** Where a published map is: what Maps::publish() and update() answer. */
 final readonly class PublishedMap
 {
-    /** What the API's answer must hold, as dotted paths. */
-    public const FIELDS = ['hashid', 'version', 'urls.page', 'urls.images', 'embed'];
+    /** What the API's answer must hold: dotted paths and their types. */
+    public const FIELDS = [
+        'hashid' => 'hashid',
+        'version' => 'int',
+        'urls.page' => 'string',
+        'urls.images' => 'images',
+        'embed' => 'string',
+    ];
 
     /**
      * @param  list<array{width: int, webp: string, jpg: string}>  $images
@@ -24,11 +30,11 @@ final readonly class PublishedMap
     public static function fromArray(array $answer): self
     {
         return new self(
-            hashid: (string) $answer['hashid'],
-            version: (int) $answer['version'],
-            pageUrl: (string) $answer['urls']['page'],
+            hashid: $answer['hashid'],
+            version: $answer['version'],
+            pageUrl: $answer['urls']['page'],
             images: $answer['urls']['images'],
-            embed: (string) $answer['embed'],
+            embed: $answer['embed'],
         );
     }
 }

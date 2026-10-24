@@ -101,13 +101,32 @@ it('sends a publish once when the connection drops, and marks it uncertain, not 
     expect($attempts)->toBe(1);
 });
 
-it('retries a read or an update when the connection drops, and says a retry may help', function () {
+it('retries a read, an update or an unpublish when the connection drops, and says a retry may help', function (string $call) {
     $attempts = 0;
     droppingConnections($attempts);
+    $calls = [
+        'get' => fn () => app(Maps::class)->get('qeEUqeleyP'),
+        'update' => fn () => app(Maps::class)->update('qeEUqeleyP', giverny()),
+        'unpublish' => fn () => app(Maps::class)->unpublish('qeEUqeleyP'),
+    ];
 
-    expect(fn () => app(Maps::class)->get('qeEUqeleyP'))
+    expect($calls[$call])
         ->toThrow(fn (MapsException $exception) => expect([$exception->retryable, $exception->uncertain])->toBe([true, false]));
     expect($attempts)->toBe(3);
+})->with(['get', 'update', 'unpublish']);
+
+it('treats a 500 on a publish as maybe stored, and retries an update after one', function () {
+    Http::fake([
+        'maps.example/v1/maps' => Http::response(['error' => 'Internal error'], 500),
+        'maps.example/v1/maps/qeEUqeleyP' => Http::sequence()
+            ->push(['error' => 'Internal error'], 500)
+            ->push(published(version: 2), 200),
+    ]);
+
+    expect(fn () => app(Maps::class)->publish(giverny()))
+        ->toThrow(fn (MapsException $exception) => expect([$exception->status, $exception->retryable, $exception->uncertain])->toBe([500, false, true]));
+    expect(app(Maps::class)->update('qeEUqeleyP', giverny())->version)->toBe(2);
+    Http::assertSentCount(3);
 });
 
 it('tries again after a 429', function () {
@@ -152,7 +171,8 @@ it('refuses a hashid that is not one, rather than putting it in a path', functio
     Http::fake();
 
     expect(fn () => app(Maps::class)->unpublish('../assets'))->toThrow(InvalidArgumentException::class)
-        ->and(fn () => app(Maps::class)->get(''))->toThrow(InvalidArgumentException::class);
+        ->and(fn () => app(Maps::class)->get(''))->toThrow(InvalidArgumentException::class)
+        ->and(fn () => app(Maps::class)->unpublish("qeEUqeleyP\n"))->toThrow(InvalidArgumentException::class);
     Http::assertNothingSent();
 });
 
@@ -162,6 +182,23 @@ it('raises a MapsException for a success whose body is not the API’s answer', 
     expect(fn () => app(Maps::class)->publish(giverny()))
         ->toThrow(fn (MapsException $exception) => expect([$exception->retryable, $exception->uncertain])->toBe([false, true]));
 });
+
+it('refuses an answer with a field of the wrong type, and lets a repeatable call try again', function (array $answer) {
+    Http::fake([
+        'maps.example/v1/maps' => Http::response($answer, 201),
+        'maps.example/v1/maps/qeEUqeleyP' => Http::response($answer, 200),
+    ]);
+
+    expect(fn () => app(Maps::class)->publish(giverny()))
+        ->toThrow(fn (MapsException $exception) => expect([$exception->retryable, $exception->uncertain])->toBe([false, true]))
+        ->and(fn () => app(Maps::class)->update('qeEUqeleyP', giverny()))
+        ->toThrow(fn (MapsException $exception) => expect([$exception->retryable, $exception->uncertain])->toBe([true, false]));
+})->with([
+    'images not a list' => [['urls' => ['page' => 'x', 'images' => 'x']] + published()],
+    'an image missing its jpg' => [['urls' => ['page' => 'x', 'images' => [['width' => 400, 'webp' => 'x']]]] + published()],
+    'a hashid that is not one' => [['hashid' => ['qeEUqeleyP']] + published()],
+    'a version as a string' => [['version' => '2'] + published()],
+]);
 
 it('tries an update again after a timeout, since it is safe to repeat', function () {
     Http::fake(['maps.example/v1/maps/qeEUqeleyP' => Http::sequence()

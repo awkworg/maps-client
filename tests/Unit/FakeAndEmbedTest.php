@@ -6,6 +6,7 @@ use Awkw\MapsClient\Embed;
 use Awkw\MapsClient\Maps;
 use Awkw\MapsClient\MapsException;
 use Awkw\MapsClient\Testing\FakeMaps;
+use PHPUnit\Framework\AssertionFailedError;
 
 it('stands in for the service in a client app’s tests', function () {
     $fake = FakeMaps::swap();
@@ -49,7 +50,20 @@ it('adds the SDK’s script tag to the service’s embed code when it knows wher
 });
 
 it('says nothing was published only when nothing was', function () {
-    FakeMaps::swap()->assertNothingPublished();
+    $fake = FakeMaps::swap();
+    $fake->assertNothingPublished();
+
+    $map = $fake->publish(new MapDocument('Giverny', ['ashgrove.knownart.co']));
+    $fake->unpublish($map->hashid);
+
+    expect(fn () => $fake->assertNothingPublished())->toThrow(AssertionFailedError::class);
+});
+
+it('refuses a hashid that is not one, as the real client does', function () {
+    $fake = FakeMaps::swap();
+
+    expect(fn () => $fake->unpublish('../assets'))->toThrow(InvalidArgumentException::class)
+        ->and(fn () => $fake->get("qeEUqeleyP\n"))->toThrow(InvalidArgumentException::class);
 });
 
 it('leaves the SDK’s base out when it is empty', function () {

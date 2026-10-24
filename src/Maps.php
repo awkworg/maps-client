@@ -15,7 +15,12 @@ interface Maps
     /** @throws MapsException */
     public function publish(MapDocument $document): PublishedMap;
 
-    /** Replaces a published map's document; its version goes up. @throws MapsException */
+    /**
+     * Replaces a published map's document; its version goes up.
+     *
+     * @throws MapsException
+     * @throws \InvalidArgumentException when the hashid isn't one
+     */
     public function update(string $hashid, MapDocument $document): PublishedMap;
 
     /**
@@ -23,6 +28,7 @@ interface Maps
      * is already gone counts as unpublished.
      *
      * @throws MapsException
+     * @throws \InvalidArgumentException when the hashid isn't one
      */
     public function unpublish(string $hashid): void;
 
@@ -33,6 +39,7 @@ interface Maps
      * @return array<string, mixed>
      *
      * @throws MapsException
+     * @throws \InvalidArgumentException when the hashid isn't one
      */
     public function get(string $hashid): array;
 
