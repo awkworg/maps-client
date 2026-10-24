@@ -1,0 +1,13 @@
+parameters:
+    level: 8
+    paths:
+        - src
+        - config
+    tmpDir: build/phpstan
+    checkOctaneCompatibility: true
+    ignoreErrors:
+        # The package's own config file, which Larastan takes for code
+        # outside the app's config directory.
+        -
+            identifier: larastan.noEnvCallsOutsideOfConfig
+            path: config/maps.php

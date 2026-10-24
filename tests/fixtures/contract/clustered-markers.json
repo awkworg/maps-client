@@ -1,0 +1,554 @@
+{
+    "contract": 2,
+    "title": "Chicago gallery guide",
+    "map": {
+        "style": "light",
+        "aspect_ratio": "16:9"
+    },
+    "markers": [
+        {
+            "id": "venue-1",
+            "coordinates": [-87.7, 41.86],
+            "label": "Venue 1",
+            "icon": {
+                "builtin": "museum"
+            },
+            "size": "small"
+        },
+        {
+            "id": "venue-2",
+            "coordinates": [-87.688, 41.86],
+            "label": "Venue 2",
+            "icon": {
+                "builtin": "artwork"
+            },
+            "size": "small"
+        },
+        {
+            "id": "venue-3",
+            "coordinates": [-87.676, 41.86],
+            "label": "Venue 3",
+            "icon": {
+                "builtin": "artwork"
+            },
+            "size": "small"
+        },
+        {
+            "id": "venue-4",
+            "coordinates": [-87.664, 41.86],
+            "label": "Venue 4",
+            "icon": {
+                "builtin": "museum"
+            },
+            "size": "small"
+        },
+        {
+            "id": "venue-5",
+            "coordinates": [-87.652, 41.86],
+            "label": "Venue 5",
+            "icon": {
+                "builtin": "artwork"
+            },
+            "size": "small"
+        },
+        {
+            "id": "venue-6",
+            "coordinates": [-87.64, 41.86],
+            "label": "Venue 6",
+            "icon": {
+                "builtin": "artwork"
+            },
+            "size": "small"
+        },
+        {
+            "id": "venue-7",
+            "coordinates": [-87.628, 41.86],
+            "label": "Venue 7",
+            "icon": {
+                "builtin": "museum"
+            },
+            "size": "small"
+        },
+        {
+            "id": "venue-8",
+            "coordinates": [-87.616, 41.86],
+            "label": "Venue 8",
+            "icon": {
+                "builtin": "artwork"
+            },
+            "size": "small"
+        },
+        {
+            "id": "venue-9",
+            "coordinates": [-87.604, 41.86],
+            "label": "Venue 9",
+            "icon": {
+                "builtin": "artwork"
+            },
+            "size": "small"
+        },
+        {
+            "id": "venue-10",
+            "coordinates": [-87.592, 41.86],
+            "label": "Venue 10",
+            "icon": {
+                "builtin": "museum"
+            },
+            "size": "small"
+        },
+        {
+            "id": "venue-11",
+            "coordinates": [-87.7, 41.87],
+            "label": "Venue 11",
+            "icon": {
+                "builtin": "artwork"
+            },
+            "size": "small"
+        },
+        {
+            "id": "venue-12",
+            "coordinates": [-87.688, 41.87],
+            "label": "Venue 12",
+            "icon": {
+                "builtin": "artwork"
+            },
+            "size": "small"
+        },
+        {
+            "id": "venue-13",
+            "coordinates": [-87.676, 41.87],
+            "label": "Venue 13",
+            "icon": {
+                "builtin": "museum"
+            },
+            "size": "small"
+        },
+        {
+            "id": "venue-14",
+            "coordinates": [-87.664, 41.87],
+            "label": "Venue 14",
+            "icon": {
+                "builtin": "artwork"
+            },
+            "size": "small"
+        },
+        {
+            "id": "venue-15",
+            "coordinates": [-87.652, 41.87],
+            "label": "Venue 15",
+            "icon": {
+                "builtin": "artwork"
+            },
+            "size": "small"
+        },
+        {
+            "id": "venue-16",
+            "coordinates": [-87.64, 41.87],
+            "label": "Venue 16",
+            "icon": {
+                "builtin": "museum"
+            },
+            "size": "small"
+        },
+        {
+            "id": "venue-17",
+            "coordinates": [-87.628, 41.87],
+            "label": "Venue 17",
+            "icon": {
+                "builtin": "artwork"
+            },
+            "size": "small"
+        },
+        {
+            "id": "venue-18",
+            "coordinates": [-87.616, 41.87],
+            "label": "Venue 18",
+            "icon": {
+                "builtin": "artwork"
+            },
+            "size": "small"
+        },
+        {
+            "id": "venue-19",
+            "coordinates": [-87.604, 41.87],
+            "label": "Venue 19",
+            "icon": {
+                "builtin": "museum"
+            },
+            "size": "small"
+        },
+        {
+            "id": "venue-20",
+            "coordinates": [-87.592, 41.87],
+            "label": "Venue 20",
+            "icon": {
+                "builtin": "artwork"
+            },
+            "size": "small"
+        },
+        {
+            "id": "venue-21",
+            "coordinates": [-87.7, 41.88],
+            "label": "Venue 21",
+            "icon": {
+                "builtin": "artwork"
+            },
+            "size": "small"
+        },
+        {
+            "id": "venue-22",
+            "coordinates": [-87.688, 41.88],
+            "label": "Venue 22",
+            "icon": {
+                "builtin": "museum"
+            },
+            "size": "small"
+        },
+        {
+            "id": "venue-23",
+            "coordinates": [-87.676, 41.88],
+            "label": "Venue 23",
+            "icon": {
+                "builtin": "artwork"
+            },
+            "size": "small"
+        },
+        {
+            "id": "venue-24",
+            "coordinates": [-87.664, 41.88],
+            "label": "Venue 24",
+            "icon": {
+                "builtin": "artwork"
+            },
+            "size": "small"
+        },
+        {
+            "id": "venue-25",
+            "coordinates": [-87.652, 41.88],
+            "label": "Venue 25",
+            "icon": {
+                "builtin": "museum"
+            },
+            "size": "small"
+        },
+        {
+            "id": "venue-26",
+            "coordinates": [-87.64, 41.88],
+            "label": "Venue 26",
+            "icon": {
+                "builtin": "artwork"
+            },
+            "size": "small"
+        },
+        {
+            "id": "venue-27",
+            "coordinates": [-87.628, 41.88],
+            "label": "Venue 27",
+            "icon": {
+                "builtin": "artwork"
+            },
+            "size": "small"
+        },
+        {
+            "id": "venue-28",
+            "coordinates": [-87.616, 41.88],
+            "label": "Venue 28",
+            "icon": {
+                "builtin": "museum"
+            },
+            "size": "small"
+        },
+        {
+            "id": "venue-29",
+            "coordinates": [-87.604, 41.88],
+            "label": "Venue 29",
+            "icon": {
+                "builtin": "artwork"
+            },
+            "size": "small"
+        },
+        {
+            "id": "venue-30",
+            "coordinates": [-87.592, 41.88],
+            "label": "Venue 30",
+            "icon": {
+                "builtin": "artwork"
+            },
+            "size": "small"
+        },
+        {
+            "id": "venue-31",
+            "coordinates": [-87.7, 41.89],
+            "label": "Venue 31",
+            "icon": {
+                "builtin": "museum"
+            },
+            "size": "small"
+        },
+        {
+            "id": "venue-32",
+            "coordinates": [-87.688, 41.89],
+            "label": "Venue 32",
+            "icon": {
+                "builtin": "artwork"
+            },
+            "size": "small"
+        },
+        {
+            "id": "venue-33",
+            "coordinates": [-87.676, 41.89],
+            "label": "Venue 33",
+            "icon": {
+                "builtin": "artwork"
+            },
+            "size": "small"
+        },
+        {
+            "id": "venue-34",
+            "coordinates": [-87.664, 41.89],
+            "label": "Venue 34",
+            "icon": {
+                "builtin": "museum"
+            },
+            "size": "small"
+        },
+        {
+            "id": "venue-35",
+            "coordinates": [-87.652, 41.89],
+            "label": "Venue 35",
+            "icon": {
+                "builtin": "artwork"
+            },
+            "size": "small"
+        },
+        {
+            "id": "venue-36",
+            "coordinates": [-87.64, 41.89],
+            "label": "Venue 36",
+            "icon": {
+                "builtin": "artwork"
+            },
+            "size": "small"
+        },
+        {
+            "id": "venue-37",
+            "coordinates": [-87.628, 41.89],
+            "label": "Venue 37",
+            "icon": {
+                "builtin": "museum"
+            },
+            "size": "small"
+        },
+        {
+            "id": "venue-38",
+            "coordinates": [-87.616, 41.89],
+            "label": "Venue 38",
+            "icon": {
+                "builtin": "artwork"
+            },
+            "size": "small"
+        },
+        {
+            "id": "venue-39",
+            "coordinates": [-87.604, 41.89],
+            "label": "Venue 39",
+            "icon": {
+                "builtin": "artwork"
+            },
+            "size": "small"
+        },
+        {
+            "id": "venue-40",
+            "coordinates": [-87.592, 41.89],
+            "label": "Venue 40",
+            "icon": {
+                "builtin": "museum"
+            },
+            "size": "small"
+        },
+        {
+            "id": "venue-41",
+            "coordinates": [-87.7, 41.9],
+            "label": "Venue 41",
+            "icon": {
+                "builtin": "artwork"
+            },
+            "size": "small"
+        },
+        {
+            "id": "venue-42",
+            "coordinates": [-87.688, 41.9],
+            "label": "Venue 42",
+            "icon": {
+                "builtin": "artwork"
+            },
+            "size": "small"
+        },
+        {
+            "id": "venue-43",
+            "coordinates": [-87.676, 41.9],
+            "label": "Venue 43",
+            "icon": {
+                "builtin": "museum"
+            },
+            "size": "small"
+        },
+        {
+            "id": "venue-44",
+            "coordinates": [-87.664, 41.9],
+            "label": "Venue 44",
+            "icon": {
+                "builtin": "artwork"
+            },
+            "size": "small"
+        },
+        {
+            "id": "venue-45",
+            "coordinates": [-87.652, 41.9],
+            "label": "Venue 45",
+            "icon": {
+                "builtin": "artwork"
+            },
+            "size": "small"
+        },
+        {
+            "id": "venue-46",
+            "coordinates": [-87.64, 41.9],
+            "label": "Venue 46",
+            "icon": {
+                "builtin": "museum"
+            },
+            "size": "small"
+        },
+        {
+            "id": "venue-47",
+            "coordinates": [-87.628, 41.9],
+            "label": "Venue 47",
+            "icon": {
+                "builtin": "artwork"
+            },
+            "size": "small"
+        },
+        {
+            "id": "venue-48",
+            "coordinates": [-87.616, 41.9],
+            "label": "Venue 48",
+            "icon": {
+                "builtin": "artwork"
+            },
+            "size": "small"
+        },
+        {
+            "id": "venue-49",
+            "coordinates": [-87.604, 41.9],
+            "label": "Venue 49",
+            "icon": {
+                "builtin": "museum"
+            },
+            "size": "small"
+        },
+        {
+            "id": "venue-50",
+            "coordinates": [-87.592, 41.9],
+            "label": "Venue 50",
+            "icon": {
+                "builtin": "artwork"
+            },
+            "size": "small"
+        },
+        {
+            "id": "venue-51",
+            "coordinates": [-87.7, 41.91],
+            "label": "Venue 51",
+            "icon": {
+                "builtin": "artwork"
+            },
+            "size": "small"
+        },
+        {
+            "id": "venue-52",
+            "coordinates": [-87.688, 41.91],
+            "label": "Venue 52",
+            "icon": {
+                "builtin": "museum"
+            },
+            "size": "small"
+        },
+        {
+            "id": "venue-53",
+            "coordinates": [-87.676, 41.91],
+            "label": "Venue 53",
+            "icon": {
+                "builtin": "artwork"
+            },
+            "size": "small"
+        },
+        {
+            "id": "venue-54",
+            "coordinates": [-87.664, 41.91],
+            "label": "Venue 54",
+            "icon": {
+                "builtin": "artwork"
+            },
+            "size": "small"
+        },
+        {
+            "id": "venue-55",
+            "coordinates": [-87.652, 41.91],
+            "label": "Venue 55",
+            "icon": {
+                "builtin": "museum"
+            },
+            "size": "small"
+        },
+        {
+            "id": "venue-56",
+            "coordinates": [-87.64, 41.91],
+            "label": "Venue 56",
+            "icon": {
+                "builtin": "artwork"
+            },
+            "size": "small"
+        },
+        {
+            "id": "venue-57",
+            "coordinates": [-87.628, 41.91],
+            "label": "Venue 57",
+            "icon": {
+                "builtin": "artwork"
+            },
+            "size": "small"
+        },
+        {
+            "id": "venue-58",
+            "coordinates": [-87.616, 41.91],
+            "label": "Venue 58",
+            "icon": {
+                "builtin": "museum"
+            },
+            "size": "small"
+        },
+        {
+            "id": "venue-59",
+            "coordinates": [-87.604, 41.91],
+            "label": "Venue 59",
+            "icon": {
+                "builtin": "artwork"
+            },
+            "size": "small"
+        },
+        {
+            "id": "venue-60",
+            "coordinates": [-87.592, 41.91],
+            "label": "Venue 60",
+            "icon": {
+                "builtin": "artwork"
+            },
+            "size": "small"
+        }
+    ],
+    "cluster": true,
+    "security": {
+        "allowed_domains": ["known.art", "chi.knownart.co"]
+    }
+}

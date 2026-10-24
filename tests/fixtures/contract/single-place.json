@@ -1,0 +1,24 @@
+{
+    "contract": 2,
+    "title": "Giverny",
+    "map": { "style": "light" },
+    "markers": [
+        {
+            "id": "place-7",
+            "coordinates": [1.5333, 49.0757],
+            "label": "Giverny",
+            "icon": { "builtin": "pin" },
+            "popover": {
+                "title": "Giverny",
+                "text": "Village in Normandy.",
+                "link": {
+                    "url": "https://ashgrove.knownart.co/places/giverny",
+                    "label": "Open"
+                }
+            }
+        }
+    ],
+    "security": {
+        "allowed_domains": ["ashgrove.knownart.co", "manage.known.art"]
+    }
+}

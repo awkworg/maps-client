@@ -1,0 +1,12 @@
+{
+    "markers_max": 500,
+    "cluster_above": 50,
+    "layers_max": 20,
+    "allowed_domains_max": 50,
+    "inline_geojson_bytes_max": 1048576,
+    "icon_asset_bytes_max": 2097152,
+    "geojson_asset_bytes_max": 10485760,
+    "static_widths": [400, 800, 1200],
+    "static_scales": [1, 2],
+    "static_formats": ["webp", "jpg"]
+}
