@@ -549,6 +549,6 @@
     ],
     "cluster": true,
     "security": {
-        "allowed_domains": ["known.art", "chi.knownart.co"]
+        "allowed_domains": ["known.art", "chicago.example.org"]
     }
 }

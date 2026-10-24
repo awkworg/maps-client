@@ -8,7 +8,7 @@ the documents it sends are that repo's contract (`contract/`).
 
 ## Install
 
-A private package, installed from GitHub by tag like `vignage/billing-tenancy`:
+Installed from GitHub by tag:
 
 ```json
 "repositories": [{ "type": "vcs", "url": "https://github.com/awkworg/maps-client" }],
@@ -33,7 +33,7 @@ $maps = app(Maps::class);
 
 $document = new MapDocument(
     title: 'Giverny',
-    allowedDomains: ['ashgrove.knownart.co'],
+    allowedDomains: ['gallery.example.org'],
     view: new View(style: 'light'),
     markers: [new Marker(
         id: 'place-7',
@@ -41,7 +41,7 @@ $document = new MapDocument(
         latitude: 49.0757,
         label: 'Giverny',
         icon: Icon::builtin('pin'),
-        popover: new Popover('Giverny', linkUrl: 'https://ashgrove.knownart.co/places/giverny'),
+        popover: new Popover('Giverny', linkUrl: 'https://gallery.example.org/places/giverny'),
     )],
 );
 
@@ -102,8 +102,8 @@ $fake->assertUnpublished($hashid);
 
 ## Working on it
 
-There's no PHP on the host here, so run Composer, Pest, Pint and PHPStan
-through the Sail image:
+Without PHP on the host, run Composer, Pest, Pint and PHPStan through a
+PHP image, such as Laravel Sail's:
 
 ```bash
 docker run --rm -u "$(id -u):$(id -g)" -e COMPOSER_HOME=/tmp/composer \

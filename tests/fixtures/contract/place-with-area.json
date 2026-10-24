@@ -12,7 +12,7 @@
             "popover": {
                 "title": "Art Institute of Chicago",
                 "link": {
-                    "url": "https://aic.knownart.co/places/art-institute"
+                    "url": "https://museum.example.org/places/art-institute"
                 }
             }
         },
@@ -61,5 +61,5 @@
             }
         }
     ],
-    "security": { "allowed_domains": ["aic.knownart.co"] }
+    "security": { "allowed_domains": ["museum.example.org"] }
 }

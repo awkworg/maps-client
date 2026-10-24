@@ -53,7 +53,7 @@ it('says nothing was published only when nothing was', function () {
     $fake = FakeMaps::swap();
     $fake->assertNothingPublished();
 
-    $map = $fake->publish(new MapDocument('Giverny', ['ashgrove.knownart.co']));
+    $map = $fake->publish(new MapDocument('Giverny', ['gallery.example.org']));
     $fake->unpublish($map->hashid);
 
     expect(fn () => $fake->assertNothingPublished())->toThrow(AssertionFailedError::class);

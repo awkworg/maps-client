@@ -18,7 +18,7 @@ use Awkw\MapsClient\Tests\TestCase;
 it('builds the single-place example', function () {
     $document = new MapDocument(
         title: 'Giverny',
-        allowedDomains: ['ashgrove.knownart.co', 'manage.known.art'],
+        allowedDomains: ['gallery.example.org', 'manage.known.art'],
         view: new View(style: 'light'),
         markers: [new Marker(
             id: 'place-7',
@@ -29,7 +29,7 @@ it('builds the single-place example', function () {
             popover: new Popover(
                 title: 'Giverny',
                 text: 'Village in Normandy.',
-                linkUrl: 'https://ashgrove.knownart.co/places/giverny',
+                linkUrl: 'https://gallery.example.org/places/giverny',
                 linkLabel: 'Open',
             ),
         )],
@@ -43,10 +43,10 @@ it('builds the place-with-area example', function () {
 
     $document = new MapDocument(
         title: 'Art Institute of Chicago',
-        allowedDomains: ['aic.knownart.co'],
+        allowedDomains: ['museum.example.org'],
         view: new View(style: 'light', aspectRatio: '4:3'),
         markers: [
-            new Marker('place-40', -87.6237, 41.8796, 'Art Institute of Chicago', Icon::builtin('museum'), size: 'large', popover: new Popover('Art Institute of Chicago', linkUrl: 'https://aic.knownart.co/places/art-institute')),
+            new Marker('place-40', -87.6237, 41.8796, 'Art Institute of Chicago', Icon::builtin('museum'), size: 'large', popover: new Popover('Art Institute of Chicago', linkUrl: 'https://museum.example.org/places/art-institute')),
             new Marker('place-41', -87.6224, 41.8797, 'Modern Wing', Icon::builtin('building'), size: 'small'),
             new Marker('place-42', -87.6231, 41.8803, 'Ryan Learning Center', Icon::builtin('library'), size: 'small'),
         ],

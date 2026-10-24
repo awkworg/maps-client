@@ -12,13 +12,13 @@
                 "title": "Giverny",
                 "text": "Village in Normandy.",
                 "link": {
-                    "url": "https://ashgrove.knownart.co/places/giverny",
+                    "url": "https://gallery.example.org/places/giverny",
                     "label": "Open"
                 }
             }
         }
     ],
     "security": {
-        "allowed_domains": ["ashgrove.knownart.co", "manage.known.art"]
+        "allowed_domains": ["gallery.example.org", "manage.known.art"]
     }
 }
