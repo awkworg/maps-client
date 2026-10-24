@@ -102,12 +102,16 @@ $fake->assertUnpublished($hashid);
 
 ## Working on it
 
-Without PHP on the host, run Composer, Pest, Pint and PHPStan through the
-official Composer image, which carries PHP:
+Without PHP on the host, install with the official Composer image, then run
+the tools on the official PHP image, at a version CI tests (8.3 or 8.4):
 
 ```bash
 docker run --rm -u "$(id -u):$(id -g)" -e COMPOSER_HOME=/tmp/composer \
-  -v "$PWD":/app -w /app --entrypoint php composer:2 vendor/bin/pest
+  -v "$PWD":/app -w /app composer:2 install
+docker run --rm -u "$(id -u):$(id -g)" -v "$PWD":/app -w /app php:8.4-cli vendor/bin/pest
+docker run --rm -u "$(id -u):$(id -g)" -v "$PWD":/app -w /app php:8.4-cli vendor/bin/pint
+docker run --rm -u "$(id -u):$(id -g)" -v "$PWD":/app -w /app php:8.4-cli \
+  php -d memory_limit=1G vendor/bin/phpstan analyse
 ```
 
 `tests/fixtures/contract/` is a copy of the contract's examples from
