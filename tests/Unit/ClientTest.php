@@ -198,6 +198,25 @@ it('refuses an answer with a field of the wrong type, and lets a repeatable call
     'an image missing its jpg' => [['urls' => ['page' => 'x', 'images' => [['width' => 400, 'webp' => 'x']]]] + published()],
     'a hashid that is not one' => [['hashid' => ['qeEUqeleyP']] + published()],
     'a version as a string' => [['version' => '2'] + published()],
+    'an embed that is not a string' => [['embed' => 1] + published()],
+    'a page that is not a string' => [['urls' => ['page' => null, 'images' => []]] + published()],
+]);
+
+it('keeps the hashid a publish answered with, when the rest of the answer is unusable', function () {
+    Http::fake(['maps.example/v1/maps' => Http::response(['version' => '1'] + published(), 201)]);
+
+    expect(fn () => app(Maps::class)->publish(giverny()))
+        ->toThrow(fn (MapsException $exception) => expect([$exception->uncertain, $exception->hashid])->toBe([true, 'qeEUqeleyP']));
+});
+
+it('refuses an upload answer with a field that is not a string', function (array $answer) {
+    Http::fake(['maps.example/v1/assets' => Http::response($answer, 201)]);
+
+    expect(fn () => app(Maps::class)->uploadAsset('png bytes', 'image/png'))
+        ->toThrow(fn (MapsException $exception) => expect([$exception->retryable, $exception->uncertain])->toBe([false, true]));
+})->with([
+    'no url' => [['asset' => 'a_8COyzWpWO38Ilrqb', 'kind' => 'image', 'url' => null]],
+    'an asset id as a number' => [['asset' => 7, 'kind' => 'image', 'url' => 'https://maps.example/assets/7']],
 ]);
 
 it('tries an update again after a timeout, since it is safe to repeat', function () {

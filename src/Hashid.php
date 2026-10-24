@@ -23,7 +23,7 @@ final class Hashid
     public static function check(string $hashid): string
     {
         if (! self::valid($hashid)) {
-            throw new \InvalidArgumentException('Not a map hashid: '.json_encode($hashid).'.');
+            throw new \InvalidArgumentException('Not a map hashid: '.json_encode($hashid, JSON_INVALID_UTF8_SUBSTITUTE).'.');
         }
 
         return $hashid;

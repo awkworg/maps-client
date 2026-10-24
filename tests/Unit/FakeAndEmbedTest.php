@@ -63,7 +63,8 @@ it('refuses a hashid that is not one, as the real client does', function () {
     $fake = FakeMaps::swap();
 
     expect(fn () => $fake->unpublish('../assets'))->toThrow(InvalidArgumentException::class)
-        ->and(fn () => $fake->get("qeEUqeleyP\n"))->toThrow(InvalidArgumentException::class);
+        ->and(fn () => $fake->get("qeEUqeleyP\n"))->toThrow(InvalidArgumentException::class)
+        ->and(fn () => $fake->get("\xff\xfe"))->toThrow(InvalidArgumentException::class, 'Not a map hashid: "');
 });
 
 it('leaves the SDK’s base out when it is empty', function () {

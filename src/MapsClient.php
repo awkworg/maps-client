@@ -15,8 +15,9 @@ use Throwable;
 /**
  * The maps API over HTTP, with this client's key. Calls are retried a few
  * times when the service says nothing was done (429, 503) and, for calls
- * that are safe to repeat (PUT, DELETE, GET), when it was unreachable or
- * timed out. A publish that may have landed is not sent twice.
+ * that are safe to repeat (PUT, DELETE, GET), when it was unreachable,
+ * timed out, or failed (500, 502, 504). A publish that may have landed is
+ * not sent twice.
  */
 class MapsClient implements Maps
 {
