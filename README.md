@@ -1,6 +1,6 @@
 # awkw/maps-client
 
-The Laravel client for the awkw maps service (`maps.awkw.org`): publish,
+The Laravel (12 or 13) client for the awkw maps service (`maps.awkw.org`): publish,
 update and unpublish maps, upload the icons and GeoJSON they name, and show
 them with the embed code. Any of our apps can be a client; Manage is the
 first. The API it calls is documented in `awkworg/maps` (`docs/api.md`), and
@@ -66,11 +66,19 @@ Every failure is a `MapsException`:
 
 - `status`: the HTTP status, or 0 when the service couldn't be reached.
 - `problems`: what to fix, each with the path in the document it's about.
-- `retryable`: whether the same call could succeed later. A queued job can
-  release itself on `retryable` and fail for good otherwise.
+- `retryable`: the same call is safe to make again and could succeed later.
+  A queued job can release itself on `retryable`.
+- `uncertain`: a publish or upload failed in a way that may have succeeded (a
+  timeout, a lost connection). Making it again could make a second map, so
+  don't just retry. Find out first whether it landed, for example by keeping
+  the hashid only once a publish answers.
 
-The client already retries a couple of times when the service says nothing
-was done (429, 503). For calls that are safe to repeat (update, unpublish,
+When neither is set, the same call will fail the same way: fix the document
+or the key.
+
+A hashid that isn't one throws `InvalidArgumentException` before any request
+is sent. The client already retries a couple of times when the service says
+nothing was done (429, 503). For calls that are safe to repeat (update, unpublish,
 get), it also retries when the service couldn't be reached or timed out. A
 publish that may have been stored is never sent twice.
 

@@ -23,7 +23,9 @@ it('stands in for the service in a client app’s tests', function () {
 
     $maps->unpublish($map->hashid);
     $fake->assertUnpublished($map->hashid);
-    $fake->assertNothingPublished();
+    // Still published once, though it isn't live any more.
+    $fake->assertPublished(fn (array $document) => $document['title'] === 'Giverny');
+    expect($fake->maps)->toBe([]);
 
     expect(fn () => $maps->update($map->hashid, new MapDocument('x', ['known.art'])))->toThrow(MapsException::class);
 });
@@ -44,4 +46,14 @@ it('adds the SDK’s script tag to the service’s embed code when it knows wher
     expect(Embed::html($map))->toBe($map->embed)
         ->and(Embed::html($map, 'https://cdn.example/maps.js', 'https://maps.example/'))
         ->toBe($map->embed."\n".'<script src="https://cdn.example/maps.js" data-maps-base="https://maps.example" defer></script>');
+});
+
+it('says nothing was published only when nothing was', function () {
+    FakeMaps::swap()->assertNothingPublished();
+});
+
+it('leaves the SDK’s base out when it is empty', function () {
+    $map = new PublishedMap('qeEUqeleyP', 1, 'https://maps.example/qeEUqeleyP', [], '<img>');
+
+    expect(Embed::html($map, 'https://cdn.example/maps.js', ''))->toBe("<img>\n".'<script src="https://cdn.example/maps.js" defer></script>');
 });

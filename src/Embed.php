@@ -21,7 +21,7 @@ final class Embed
             return $map->embed;
         }
 
-        $base = $mapsBase !== null ? ' data-maps-base="'.e(rtrim($mapsBase, '/')).'"' : '';
+        $base = $mapsBase !== null && $mapsBase !== '' ? ' data-maps-base="'.e(rtrim($mapsBase, '/')).'"' : '';
 
         return $map->embed."\n".'<script src="'.e($sdkUrl).'"'.$base.' defer></script>';
     }

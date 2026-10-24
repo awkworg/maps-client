@@ -119,3 +119,7 @@ it('removes a part of the default branding with null', function () {
 it('refuses a built-in icon the service does not ship', function () {
     Icon::builtin('star');
 })->throws(InvalidArgumentException::class);
+
+it('sends an empty view as an object, as the contract asks', function () {
+    expect(json_encode((new MapDocument('Giverny', ['known.art']))->toArray()))->toContain('"map":{}');
+});

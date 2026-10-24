@@ -17,8 +17,17 @@ use PHPUnit\Framework\Assert;
  */
 class FakeMaps implements Maps
 {
-    /** @var array<string, array{document: array<string, mixed>, version: int}> */
+    /** @var array<string, array{document: array<string, mixed>, version: int}> the maps live now */
     public array $maps = [];
+
+    /**
+     * Every document published or updated, in order, kept after an unpublish:
+     * what the assertions read, so "was it published" doesn't depend on
+     * whether it was unpublished since.
+     *
+     * @var list<array<string, mixed>>
+     */
+    public array $published = [];
 
     /** @var array<string, array{contents: string, contentType: string}> */
     public array $assets = [];
@@ -40,6 +49,7 @@ class FakeMaps implements Maps
     {
         $hashid = Str::random(10);
         $this->maps[$hashid] = ['document' => $document->toArray(), 'version' => 1];
+        $this->published[] = $document->toArray();
 
         return $this->answer($hashid);
     }
@@ -51,6 +61,7 @@ class FakeMaps implements Maps
         }
 
         $this->maps[$hashid] = ['document' => $document->toArray(), 'version' => $this->maps[$hashid]['version'] + 1];
+        $this->published[] = $document->toArray();
 
         return $this->answer($hashid);
     }
@@ -78,18 +89,22 @@ class FakeMaps implements Maps
         return new Asset($id, $contentType === 'application/geo+json' ? 'geojson' : 'image', "{$this->baseUrl}/assets/{$id}");
     }
 
-    /** @param (callable(array<string, mixed>): bool)|null $matching given each published document */
+    /**
+     * That a document was published or updated, whether or not it is live now.
+     *
+     * @param  (callable(array<string, mixed>): bool)|null  $matching  given each document sent
+     */
     public function assertPublished(?callable $matching = null): void
     {
-        $documents = array_column($this->maps, 'document');
-        $found = $matching === null ? $documents : array_filter($documents, $matching);
+        $found = $matching === null ? $this->published : array_filter($this->published, $matching);
 
         Assert::assertNotEmpty($found, 'No published map matched.');
     }
 
+    /** That nothing was ever published or updated. */
     public function assertNothingPublished(): void
     {
-        Assert::assertEmpty($this->maps, count($this->maps).' map(s) were published.');
+        Assert::assertEmpty($this->published, count($this->published).' document(s) were published or updated.');
     }
 
     public function assertUnpublished(string $hashid): void

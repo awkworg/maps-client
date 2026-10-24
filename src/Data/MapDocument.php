@@ -39,7 +39,8 @@ final readonly class MapDocument
         return array_filter([
             'contract' => self::CONTRACT,
             'title' => $this->title,
-            'map' => $this->view->toArray(),
+            // An object even when empty: json_encode writes an empty array as [].
+            'map' => $this->view->toArray() ?: new \stdClass,
             'markers' => array_map(fn (Marker $marker) => $marker->toArray(), $this->markers) ?: null,
             'cluster' => $this->cluster,
             'layers' => array_map(fn (Layer $layer) => $layer->toArray(), $this->layers) ?: null,

@@ -74,12 +74,93 @@ it('tries a publish again when the service did nothing (503), and succeeds', fun
     Http::assertSentCount(2);
 });
 
-it('never sends a publish twice after an error that may have stored it', function () {
+it('never sends a publish twice after an error that may have stored it, and says so', function () {
     Http::fake(['maps.example/v1/maps' => Http::response(['error' => 'timed out'], 504)]);
 
     expect(fn () => app(Maps::class)->publish(giverny()))
-        ->toThrow(fn (MapsException $exception) => expect($exception->retryable)->toBeTrue());
+        ->toThrow(fn (MapsException $exception) => expect([$exception->retryable, $exception->uncertain])->toBe([false, true]));
     Http::assertSentCount(1);
+});
+
+/* A fake that throws records nothing, so these count the attempts themselves. */
+function droppingConnections(int &$attempts): void
+{
+    Http::fake(function () use (&$attempts) {
+        $attempts++;
+
+        throw new ConnectionException('connection reset');
+    });
+}
+
+it('sends a publish once when the connection drops, and marks it uncertain, not retryable', function () {
+    $attempts = 0;
+    droppingConnections($attempts);
+
+    expect(fn () => app(Maps::class)->publish(giverny()))
+        ->toThrow(fn (MapsException $exception) => expect([$exception->status, $exception->retryable, $exception->uncertain])->toBe([0, false, true]));
+    expect($attempts)->toBe(1);
+});
+
+it('retries a read or an update when the connection drops, and says a retry may help', function () {
+    $attempts = 0;
+    droppingConnections($attempts);
+
+    expect(fn () => app(Maps::class)->get('qeEUqeleyP'))
+        ->toThrow(fn (MapsException $exception) => expect([$exception->retryable, $exception->uncertain])->toBe([true, false]));
+    expect($attempts)->toBe(3);
+});
+
+it('tries again after a 429', function () {
+    Http::fake(['maps.example/v1/maps' => Http::sequence()
+        ->push(['error' => 'Too many writes'], 429)
+        ->push(published(), 201)]);
+
+    expect(app(Maps::class)->publish(giverny())->hashid)->toBe('qeEUqeleyP');
+    Http::assertSentCount(2);
+});
+
+it('gives up after its retries, saying a later retry may still help', function () {
+    Http::fake(['maps.example/v1/maps' => Http::response(['error' => 'coverage could not be read'], 503)]);
+
+    expect(fn () => app(Maps::class)->publish(giverny()))
+        ->toThrow(fn (MapsException $exception) => expect([$exception->status, $exception->retryable])->toBe([503, true]));
+    Http::assertSentCount(3);
+});
+
+it('retries an unpublish the service did nothing with, and rethrows what is not a 404', function () {
+    Http::fake(['maps.example/v1/maps/qeEUqeleyP' => Http::sequence()
+        ->push(['error' => 'busy'], 503)
+        ->push(null, 204)]);
+
+    app(Maps::class)->unpublish('qeEUqeleyP');
+    Http::assertSentCount(2);
+
+    Http::fake(['maps.example/v1/maps/Other00001' => Http::response(['error' => 'broken'], 500)]);
+    expect(fn () => app(Maps::class)->unpublish('Other00001'))->toThrow(MapsException::class);
+});
+
+it('retries an upload the service did nothing with', function () {
+    Http::fake(['maps.example/v1/assets' => Http::sequence()
+        ->push(['error' => 'busy'], 503)
+        ->push(['asset' => 'a_8COyzWpWO38Ilrqb', 'kind' => 'image', 'url' => 'https://maps.example/assets/a_8COyzWpWO38Ilrqb'], 201)]);
+
+    expect(app(Maps::class)->uploadAsset('png bytes', 'image/png')->id)->toBe('a_8COyzWpWO38Ilrqb');
+    Http::assertSentCount(2);
+});
+
+it('refuses a hashid that is not one, rather than putting it in a path', function () {
+    Http::fake();
+
+    expect(fn () => app(Maps::class)->unpublish('../assets'))->toThrow(InvalidArgumentException::class)
+        ->and(fn () => app(Maps::class)->get(''))->toThrow(InvalidArgumentException::class);
+    Http::assertNothingSent();
+});
+
+it('raises a MapsException for a success whose body is not the API’s answer', function () {
+    Http::fake(['maps.example/v1/maps' => Http::response('', 201)]);
+
+    expect(fn () => app(Maps::class)->publish(giverny()))
+        ->toThrow(fn (MapsException $exception) => expect([$exception->retryable, $exception->uncertain])->toBe([false, true]));
 });
 
 it('tries an update again after a timeout, since it is safe to repeat', function () {

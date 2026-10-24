@@ -5,6 +5,9 @@ namespace Awkw\MapsClient\Data;
 /** Where a published map is: what Maps::publish() and update() answer. */
 final readonly class PublishedMap
 {
+    /** What the API's answer must hold, as dotted paths. */
+    public const FIELDS = ['hashid', 'version', 'urls.page', 'urls.images', 'embed'];
+
     /**
      * @param  list<array{width: int, webp: string, jpg: string}>  $images
      */

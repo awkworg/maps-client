@@ -30,22 +30,22 @@ class MapsClient implements Maps
 
     public function publish(MapDocument $document): PublishedMap
     {
-        return PublishedMap::fromArray(
-            $this->send('post', 'v1/maps', $document->toArray(), repeatable: false)->json(),
-        );
+        $response = $this->send('post', 'v1/maps', $document->toArray(), repeatable: false);
+
+        return PublishedMap::fromArray($this->answer($response, PublishedMap::FIELDS, repeatable: false));
     }
 
     public function update(string $hashid, MapDocument $document): PublishedMap
     {
-        return PublishedMap::fromArray(
-            $this->send('put', "v1/maps/{$hashid}", $document->toArray())->json(),
-        );
+        $response = $this->send('put', $this->mapPath($hashid), $document->toArray());
+
+        return PublishedMap::fromArray($this->answer($response, PublishedMap::FIELDS, repeatable: true));
     }
 
     public function unpublish(string $hashid): void
     {
         try {
-            $this->send('delete', "v1/maps/{$hashid}");
+            $this->send('delete', $this->mapPath($hashid));
         } catch (MapsException $exception) {
             if ($exception->status !== 404) {
                 throw $exception;
@@ -55,7 +55,7 @@ class MapsClient implements Maps
 
     public function get(string $hashid): array
     {
-        return $this->send('get', "v1/maps/{$hashid}")->json();
+        return $this->answer($this->send('get', $this->mapPath($hashid)), ['hashid', 'version'], repeatable: true);
     }
 
     public function uploadAsset(string $contents, string $contentType): Asset
@@ -65,7 +65,44 @@ class MapsClient implements Maps
             repeatable: false,
         );
 
-        return Asset::fromArray($response->json());
+        return Asset::fromArray($this->answer($response, Asset::FIELDS, repeatable: false));
+    }
+
+    /**
+     * A map's path, from a hashid checked to be one: a corrupted value such
+     * as "../assets" would otherwise reach another endpoint with this key,
+     * and an unpublish would take the 404 as success.
+     */
+    protected function mapPath(string $hashid): string
+    {
+        if (preg_match('/^[A-Za-z0-9]{10}$/', $hashid) !== 1) {
+            throw new \InvalidArgumentException("Not a map hashid: \"{$hashid}\".");
+        }
+
+        return 'v1/maps/'.rawurlencode($hashid);
+    }
+
+    /**
+     * A success's body, checked to hold what the API answers.
+     *
+     * @param  list<string>  $fields  dotted paths that must be present
+     * @return array<string, mixed>
+     */
+    protected function answer(Response $response, array $fields, bool $repeatable): array
+    {
+        $body = $response->json();
+
+        if (! is_array($body)) {
+            throw MapsException::unexpectedAnswer($response, $repeatable);
+        }
+
+        foreach ($fields as $field) {
+            if (data_get($body, $field) === null) {
+                throw MapsException::unexpectedAnswer($response, $repeatable);
+            }
+        }
+
+        return $body;
     }
 
     /** @param array<string, mixed>|null $body */
@@ -101,8 +138,8 @@ class MapsClient implements Maps
 
                     $status = $exception instanceof RequestException ? $exception->response->status() : null;
 
-                    return in_array($status, [429, 503], true)
-                        || ($repeatable && in_array($status, [502, 504], true));
+                    return in_array($status, MapsException::NOTHING_DONE, true)
+                        || ($repeatable && in_array($status, MapsException::MAYBE_DONE, true));
                 },
                 throw: false,
             );
@@ -110,11 +147,11 @@ class MapsClient implements Maps
         try {
             $response = $make($request);
         } catch (ConnectionException $exception) {
-            throw MapsException::unreachable($exception);
+            throw MapsException::unreachable($exception, $repeatable);
         }
 
         if ($response->failed()) {
-            throw MapsException::fromResponse($response);
+            throw MapsException::fromResponse($response, $repeatable);
         }
 
         return $response;
