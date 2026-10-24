@@ -1,0 +1,65 @@
+{
+    "contract": 2,
+    "title": "Art Institute of Chicago",
+    "map": { "style": "light", "aspect_ratio": "4:3" },
+    "markers": [
+        {
+            "id": "place-40",
+            "coordinates": [-87.6237, 41.8796],
+            "label": "Art Institute of Chicago",
+            "icon": { "builtin": "museum" },
+            "size": "large",
+            "popover": {
+                "title": "Art Institute of Chicago",
+                "link": {
+                    "url": "https://museum.example.org/places/art-institute"
+                }
+            }
+        },
+        {
+            "id": "place-41",
+            "coordinates": [-87.6224, 41.8797],
+            "label": "Modern Wing",
+            "icon": { "builtin": "building" },
+            "size": "small"
+        },
+        {
+            "id": "place-42",
+            "coordinates": [-87.6231, 41.8803],
+            "label": "Ryan Learning Center",
+            "icon": { "builtin": "library" },
+            "size": "small"
+        }
+    ],
+    "layers": [
+        {
+            "id": "place-40-area",
+            "data": {
+                "type": "FeatureCollection",
+                "features": [
+                    {
+                        "type": "Feature",
+                        "properties": { "name": "Art Institute of Chicago" },
+                        "geometry": {
+                            "type": "Polygon",
+                            "coordinates": [
+                                [
+                                    [-87.6249, 41.8789],
+                                    [-87.6213, 41.8789],
+                                    [-87.6213, 41.8809],
+                                    [-87.6249, 41.8809],
+                                    [-87.6249, 41.8789]
+                                ]
+                            ]
+                        }
+                    }
+                ]
+            },
+            "style": {
+                "type": "fill",
+                "paint": { "fill-color": "#c0392b", "fill-opacity": 0.15 }
+            }
+        }
+    ],
+    "security": { "allowed_domains": ["museum.example.org"] }
+}

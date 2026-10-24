@@ -1,0 +1,28 @@
+{
+    "contract": 2,
+    "title": "Fairhaven Gallery",
+    "map": {
+        "style": "dark",
+        "center": [-0.1426, 51.5386],
+        "zoom": 7,
+        "max_zoom": 15
+    },
+    "markers": [
+        {
+            "id": "place-3",
+            "coordinates": [-0.1426, 51.5386],
+            "label": "Fairhaven Gallery",
+            "icon": { "asset": "a_7f3kQ9xLm2Rt" },
+            "popover": {
+                "title": "Fairhaven Gallery",
+                "text": "Open Tuesday to Saturday.",
+                "image": { "asset": "a_Pq81ZsN4vWcY" }
+            }
+        }
+    ],
+    "branding": {
+        "logo": { "asset": "a_Lg0Fairhaven1" },
+        "attribution": "Fairhaven Gallery"
+    },
+    "security": { "allowed_domains": ["fairhaven.art", "*.fairhaven.art"] }
+}
