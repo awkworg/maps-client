@@ -102,12 +102,12 @@ $fake->assertUnpublished($hashid);
 
 ## Working on it
 
-Without PHP on the host, run Composer, Pest, Pint and PHPStan through a
-PHP image, such as Laravel Sail's:
+Without PHP on the host, run Composer, Pest, Pint and PHPStan through the
+official Composer image, which carries PHP:
 
 ```bash
 docker run --rm -u "$(id -u):$(id -g)" -e COMPOSER_HOME=/tmp/composer \
-  -v "$PWD":/app -w /app --entrypoint php sail-8.4/app vendor/bin/pest
+  -v "$PWD":/app -w /app --entrypoint php composer:2 vendor/bin/pest
 ```
 
 `tests/fixtures/contract/` is a copy of the contract's examples from
