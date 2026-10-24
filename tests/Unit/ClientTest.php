@@ -209,6 +209,27 @@ it('keeps the hashid a publish answered with, when the rest of the answer is unu
         ->toThrow(fn (MapsException $exception) => expect([$exception->uncertain, $exception->hashid])->toBe([true, 'qeEUqeleyP']));
 });
 
+it('keeps no hashid that is not one', function (mixed $hashid) {
+    Http::fake(['maps.example/v1/maps' => Http::response(['hashid' => $hashid, 'version' => '1'] + published(), 201)]);
+
+    expect(fn () => app(Maps::class)->publish(giverny()))
+        ->toThrow(fn (MapsException $exception) => expect([$exception->uncertain, $exception->hashid])->toBe([true, null]));
+})->with([
+    'missing' => [null],
+    'a list' => [['qeEUqeleyP']],
+    'a path' => ['../assets'],
+    'with a newline' => ["qeEUqeleyP\n"],
+]);
+
+it('keeps no hashid for an update or a read, whose map already existed', function () {
+    Http::fake(['maps.example/v1/maps/qeEUqeleyP' => Http::response(['version' => '2'] + published(), 200)]);
+
+    $kept = fn (MapsException $exception) => expect([$exception->retryable, $exception->hashid])->toBe([true, null]);
+
+    expect(fn () => app(Maps::class)->update('qeEUqeleyP', giverny()))->toThrow($kept)
+        ->and(fn () => app(Maps::class)->get('qeEUqeleyP'))->toThrow($kept);
+});
+
 it('refuses an upload answer with a field that is not a string', function (array $answer) {
     Http::fake(['maps.example/v1/assets' => Http::response($answer, 201)]);
 

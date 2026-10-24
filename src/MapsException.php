@@ -83,12 +83,15 @@ class MapsException extends RuntimeException
     /**
      * A success whose body isn't what the API answers. The call was done: a
      * repeatable one may be made again for a usable answer, and for one that
-     * isn't safe to repeat, what it made is unknown, unless the body names a
-     * map, which is kept so the caller can record or unpublish it.
+     * isn't safe to repeat, what it made is unknown. For a publish whose
+     * body names a map, that map is kept so the caller can record or
+     * unpublish it; any other call's hashid is a map that already existed.
+     *
+     * @param  bool  $publish  whether the call was a publish
      */
-    public static function unexpectedAnswer(Response $response, bool $repeatable): self
+    public static function unexpectedAnswer(Response $response, bool $repeatable, bool $publish = false): self
     {
-        $hashid = $response->json('hashid');
+        $hashid = $publish ? $response->json('hashid') : null;
 
         return new self(
             "maps: {$response->status()} with an answer that isn't the API's",

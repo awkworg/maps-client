@@ -33,7 +33,7 @@ class MapsClient implements Maps
     {
         $response = $this->send('post', 'v1/maps', $document->toArray(), repeatable: false);
 
-        return PublishedMap::fromArray($this->answer($response, PublishedMap::FIELDS, repeatable: false));
+        return PublishedMap::fromArray($this->answer($response, PublishedMap::FIELDS, repeatable: false, publish: true));
     }
 
     public function update(string $hashid, MapDocument $document): PublishedMap
@@ -80,19 +80,20 @@ class MapsClient implements Maps
      * the type the data classes build from.
      *
      * @param  array<string, 'string'|'int'|'hashid'|'images'>  $fields  dotted paths and their types
+     * @param  bool  $publish  whether the call was a publish, whose map a failure keeps
      * @return array<string, mixed>
      */
-    protected function answer(Response $response, array $fields, bool $repeatable): array
+    protected function answer(Response $response, array $fields, bool $repeatable, bool $publish = false): array
     {
         $body = $response->json();
 
         if (! is_array($body)) {
-            throw MapsException::unexpectedAnswer($response, $repeatable);
+            throw MapsException::unexpectedAnswer($response, $repeatable, $publish);
         }
 
         foreach ($fields as $field => $type) {
             if (! self::isOfType(data_get($body, $field), $type)) {
-                throw MapsException::unexpectedAnswer($response, $repeatable);
+                throw MapsException::unexpectedAnswer($response, $repeatable, $publish);
             }
         }
 

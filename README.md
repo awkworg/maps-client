@@ -71,9 +71,11 @@ Every failure is a `MapsException`:
 - `uncertain`: a publish or upload failed in a way that may have succeeded (a
   timeout, a lost connection, a 500, an answer that isn't the API's). The
   map may exist. Making the call again could make a second map, so don't
-  retry it. Fail the job and report it. When the service's answer did name
+  retry it. Fail the job and report it. When a publish's answer did name
   the map, `hashid` holds it, so it can be recorded or unpublished;
-  otherwise this client can't find it.
+  otherwise this client can't find it. `hashid` is only ever set for a
+  publish; an uncertain upload leaves no id, but an asset no map names is
+  harmless.
 
 When neither is set, the same call will fail the same way: fix the document
 or the key.
